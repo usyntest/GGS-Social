@@ -6,4 +6,20 @@ This project is the successor of my failed [Zuckerberg moment](https://github.co
 
 ## Technologies Used:
 - Flutter
-- FastAPI
+- Flask
+
+## Running the Development Environment
+
+Create the virtual environment and install dependencies
+```
+cd api
+virtualenv venv
+source venv/Scripts/activate #windows
+source venv/bin/activate #linux
+pip install -r requirements.txt
+```
+
+Start the development server
+```
+flask --app main run --debug
+```
