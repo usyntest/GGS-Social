@@ -20,7 +20,6 @@ def login():
             abort(404)
 
         if bcrypt.checkpw(password, student['pass']):
-            print("here 1")
             return jsonify({"message": "Login successful"}), 200
         else:
             abort(401)
