@@ -8,9 +8,9 @@ authentication_bp = Blueprint('auth', __name__, url_prefix='/auth')
 @authentication_bp.route('/login/', methods=['POST'])
 def login():
     try:
-        email = request.form['email'].lower()
-        password = request.form['password'].encode('utf-8')
-
+        data = request.get_json()
+        email = data.get('email', '').lower()
+        password = data.get('password', '').encode('utf-8')
         if not check_email(email) and not check_password(password):
             raise TypeError
         
@@ -23,6 +23,9 @@ def login():
             return jsonify({"message": "Login successful"}), 200
         else:
             abort(401)
+    except KeyError:
+        # Raised when the form data is missing data
+        abort(412)
     except TypeError:
         abort(406)
             
@@ -30,10 +33,12 @@ def login():
 @authentication_bp.route('/register/', methods=['POST'])
 def register():
     try:
-        email = request.form["email"].lower()
-        password = request.form["password"].encode('utf-8')
-        name = request.form["name"].title()
-        course = request.form["course"].upper()
+        data = request.get_json()
+
+        email = data.get("email", '').lower()
+        password = data.get("password", '').encode('utf-8')
+        name = data.get("name", '').title()
+        course = data.get("course", '').upper()
 
         if not check_data(name, email, password, course):
             raise TypeError
@@ -93,7 +98,7 @@ def bad_request(e):
     return jsonify(error), 409
 
 def check_email(email):
-    if email is None:
+    if not email:
         raise TypeError
     
     if not re.findall('^[a-z]+.[0-9]{6}@sggscc.ac.in$', email):
@@ -102,7 +107,7 @@ def check_email(email):
     return True
 
 def check_password(password):
-    if password is None:
+    if not password:
         raise TypeError
     if len(password) < 8 or len(password) > 16:
         return False
@@ -120,7 +125,7 @@ def check_course(course):
         'BPA'
     ]
 
-    if course is None:
+    if not course:
         raise TypeError
     
     if course not in courses:
@@ -129,7 +134,7 @@ def check_course(course):
 
 
 def check_data(name, email, password, course):
-    if name is None:
+    if not name:
         raise TypeError
     elif check_course(course) and check_password(password) and check_email(email):
         return True
