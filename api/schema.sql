@@ -8,6 +8,7 @@ CREATE TABLE student (
     email TEXT NOT NULL UNIQUE,
     pass TEXT NOT NULL,
     salt TEXT NOT NULL,
+    api_key TEXT NOT NULL,
     created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

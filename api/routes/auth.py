@@ -18,15 +18,15 @@ def login():
         student = db.execute("SELECT * FROM student WHERE email = ?", (email,)).fetchone()
         if student is None:
             abort(404)
-
         if bcrypt.checkpw(password, student['pass']):
-            return jsonify({"message": "Login successful"}), 200
+            return jsonify({"message": "Login successful", "name": student['student_name'], "email": student['email'], "apiKey": student["api_key"].decode('UTF-8')}), 200
         else:
             abort(401)
     except KeyError:
         # Raised when the form data is missing data
         abort(412)
-    except TypeError:
+    except TypeError as e:
+        print(e)
         abort(406)
             
 
@@ -44,10 +44,11 @@ def register():
             raise TypeError
         
         salt = bcrypt.gensalt()
+        apiKey = bcrypt.hashpw(password, bcrypt.gensalt())
         hashed_password = bcrypt.hashpw(password, salt)
         db = get_db()
         db.execute(
-            "INSERT INTO student (student_name, email, pass, salt, course) VALUES (?, ?, ?, ?, ?)",(name, email, hashed_password, salt, course),
+            "INSERT INTO student (student_name, email, pass, salt, course, api_key) VALUES (?, ?, ?, ?, ?, ?)",(name, email, hashed_password, salt, course, apiKey),
         )
         db.commit()
     except KeyError:
@@ -59,43 +60,27 @@ def register():
     except db.IntegrityError:
         abort(409)
 
-    return jsonify({"message": "User Created"})
+    return jsonify({"message": "User Created", "name": name, "email": email, "apiKey": apiKey.decode('UTF-8')})
 
 
 @authentication_bp.app_errorhandler(404)
-def bad_request(e):
-    error = {
-        "message": "User is not registered"
-    }
-    return jsonify(error), 404
-
 @authentication_bp.app_errorhandler(401)
-def bad_request(e):
-    error = {
-        "message": "Incorrect Password"
-    }
-    return jsonify(error), 401
-
 @authentication_bp.app_errorhandler(412)
-def bad_request(e):
-    error = {
-        "message": "Missing Form Data"
-    }
-    return jsonify(error), 412
-
 @authentication_bp.app_errorhandler(406)
-def bad_request(e):
-    error = {
-        "message": "Value/s are not appropriate"
-    }
-    return jsonify(error), 406
-
 @authentication_bp.app_errorhandler(409)
 def bad_request(e):
-    error = {
-        "message": "Integrity Error Database, User Already Exists"
+    error_messages = {
+        404: "User is not registered",
+        401: "Incorrect Password",
+        412: "Missing Form Data",
+        406: "Value/s are not appropriate",
+        409: "Integrity Error Database, User Already Exists"
     }
-    return jsonify(error), 409
+
+    status_code = getattr(e, 'code', 500)  # Default to 500 if code attribute not present
+    error = {"message": error_messages.get(status_code, "Internal Server Error")}
+    return jsonify(error), status_code
+
 
 def check_email(email):
     if not email:
