@@ -44,11 +44,11 @@ def register():
             raise TypeError
         
         salt = bcrypt.gensalt()
-        apiKey = bcrypt.hashpw(password, bcrypt.gensalt())
+        api_key = bcrypt.hashpw(password, bcrypt.gensalt())
         hashed_password = bcrypt.hashpw(password, salt)
         db = get_db()
         db.execute(
-            "INSERT INTO student (student_name, email, pass, salt, course, api_key) VALUES (?, ?, ?, ?, ?, ?)",(name, email, hashed_password, salt, course, apiKey),
+            "INSERT INTO student (student_name, email, pass, salt, course, api_key) VALUES (?, ?, ?, ?, ?, ?)",(name, email, hashed_password, salt, course, api_key),
         )
         db.commit()
     except KeyError:
@@ -60,7 +60,7 @@ def register():
     except db.IntegrityError:
         abort(409)
 
-    return jsonify({"message": "User Created", "name": name, "email": email, "course": course, "apiKey": apiKey.decode('UTF-8')})
+    return jsonify({"message": "User Created", "name": name, "email": email, "course": course, "apiKey": api_key.decode('UTF-8')})
 
 
 @authentication_bp.app_errorhandler(404)
@@ -78,7 +78,7 @@ def bad_request(e):
     }
 
     status_code = getattr(e, 'code', 500)  # Default to 500 if code attribute not present
-    error = {"message": error_messages.get(status_code, "Internal Server Error")}
+    error = {"error": error_messages.get(status_code, "Internal Server Error")}
     return jsonify(error), status_code
 
 

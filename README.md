@@ -57,7 +57,7 @@ flask --app api run --debug
 
 `/auth/register/` - Registering a user
 
-```
+```json
 {
     "name": "uday",
     "email": only emails with @sggscc.ac.in domain
@@ -68,7 +68,7 @@ flask --app api run --debug
 
 `/auth/login/` - Login
 
-```
+```json
 {
     "name": "uday",
     "email": only emails with @sggscc.ac.in domain
@@ -80,5 +80,43 @@ flask --app api run --debug
 - `412` - Request is incomplete. Forget to give few parameters. Key error while retrieving body elements
 - `406` - Data checks are not passed. Invalid data for User creation
 - `409` - User already exists, Integrity Error Database(register)
+
+### Confession
+
+`/confession/get?apiKey=?` - Get last 25 confessions  
+- Response
+```json
+{
+    "message": "confession list sent",
+    "confessions": [
+        {"body": "Hello, World. This is dummy text"},
+        {"body": "Hello, World. This is dummy text"},
+        {"body": "Hello, World. This is dummy text"},
+        {"body": "Hello, World. This is dummy text"},
+    ]
+}
+```
+`/confession/post/` - Post a confession
+- Request (JSON Body)
+```json
+{
+    "apiKey": apiKey
+}
+```
+
+- Response 
+```json
+{
+    "message": "confession created",
+    "confessions": [
+        {"body": "Hello, World. This is dummy text"},
+        {"body": "Hello, World. This is dummy text"},
+        {"body": "Hello, World. This is dummy text"},
+        {"body": "Hello, World. This is dummy text"},
+    ]
+}
+```
+- `401` - Either the apiKey missing or it is wrong
+- `500` - Internal Server Error
 
 ## Notes for Myself

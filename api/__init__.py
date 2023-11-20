@@ -27,7 +27,8 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    from .routes import auth
+    from .routes import auth, confession
     app.register_blueprint(auth.authentication_bp)
+    app.register_blueprint(confession.confession_bp)
 
     return app
