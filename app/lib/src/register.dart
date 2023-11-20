@@ -98,22 +98,22 @@ class _RegisterFormState extends State<RegisterForm> {
                 DropdownButtonFormField<String>(
                   value: dropdownValue,
                   decoration: InputDecoration(border: OutlineInputBorder()),
-                  items: courses.keys
+                  items: user.courses.keys
                       .map((key) => DropdownMenuItem<String>(
                             value: key,
                             child: Text(courses[key]!),
                           ))
                       .toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      formValues["course"] = newValue;
-                    });
-                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please select a course';
                     }
                     return null;
+                  },
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      formValues["course"] = newValue;
+                    });
                   },
                   onSaved: (value) {
                     formValues["course"] = value;

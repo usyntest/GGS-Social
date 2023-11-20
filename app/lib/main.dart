@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/src/confessions.dart';
+import 'package:app/src/home.dart';
 import 'package:app/src/authentication.dart';
 import 'package:app/src/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,14 +10,17 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final ThemeData theme = ThemeData.dark().copyWith(
-    useMaterial3: true,
-    scaffoldBackgroundColor: Colors.black,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.black,
-      centerTitle: true,
-      elevation: 0.0,
-    ),
-  );
+      useMaterial3: true,
+      scaffoldBackgroundColor: Colors.black,
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.black,
+        centerTitle: true,
+        elevation: 0.0,
+      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.black,
+          elevation: 0.0,
+          selectedItemColor: Colors.blue));
 
   MyApp({super.key});
 
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
-              create: ((context) => UserProvider('', '', false, '')))
+              create: ((context) => UserProvider('', '', '', false, '')))
         ],
         child: MaterialApp(
           theme: theme,
@@ -41,7 +44,7 @@ class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(builder: (context, value, child) {
-      return value.isLoggedIn ? const Confessions() : const Authentication();
+      return value.isLoggedIn ? Home() : const Authentication();
     });
   }
 }

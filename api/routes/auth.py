@@ -19,7 +19,7 @@ def login():
         if student is None:
             abort(404)
         if bcrypt.checkpw(password, student['pass']):
-            return jsonify({"message": "Login successful", "name": student['student_name'], "email": student['email'], "apiKey": student["api_key"].decode('UTF-8')}), 200
+            return jsonify({"message": "Login successful", "name": student['student_name'], "email": student['email'], "course": student["course"], "apiKey": student["api_key"].decode('UTF-8')}), 200
         else:
             abort(401)
     except KeyError:
@@ -60,7 +60,7 @@ def register():
     except db.IntegrityError:
         abort(409)
 
-    return jsonify({"message": "User Created", "name": name, "email": email, "apiKey": apiKey.decode('UTF-8')})
+    return jsonify({"message": "User Created", "name": name, "email": email, "course": course, "apiKey": apiKey.decode('UTF-8')})
 
 
 @authentication_bp.app_errorhandler(404)

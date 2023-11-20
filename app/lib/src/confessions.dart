@@ -30,10 +30,6 @@ class ConfessionsList extends StatelessWidget {
     return Consumer<UserProvider>(
         builder: (context, value, child) => ListView(
               children: <Widget>[
-                Text(value.name),
-                Text(value.email),
-                Text(value.isLoggedIn.toString()),
-                Text(value.apiKey),
                 ConfessionPost(),
                 ConfessionPost(),
                 ConfessionPost(),

@@ -5,15 +5,28 @@ import 'dart:convert';
 class UserProvider extends ChangeNotifier {
   String _name;
   String _email;
+  String _course;
   String _apiKey;
   bool _isLoggedIn;
+
+  final Map<String, String> courses = {
+    "BSC": "B.Sc. (Hons) Computer Science",
+    "BCH": "B.Com (Hons)",
+    "BCP": "B.Com (Prog)",
+    "BPA": "B.A. (Hons) Punjabi",
+    "BAE": "B.A. (Hons) Economics",
+    "BBE": "Bachelor of Business Economics",
+    "BMS": "Bachelor of Management Studies"
+  };
 
   bool get isLoggedIn => _isLoggedIn;
   String get email => _email;
   String get name => _name;
   String get apiKey => _apiKey;
+  String get course => _course;
 
-  UserProvider(this._name, this._email, this._isLoggedIn, this._apiKey);
+  UserProvider(
+      this._name, this._email, this._course, this._isLoggedIn, this._apiKey);
 
   Future<String> checkDetailsLogin(email, password) async {
     String url = 'http://10.0.2.2:5000/auth/login/';
@@ -32,6 +45,7 @@ class UserProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         _name = jsonDecode(response.body)['name'];
         _email = jsonDecode(response.body)['email'];
+        _course = jsonDecode(response.body)['course'];
         _isLoggedIn = true;
         _apiKey = jsonDecode(response.body)['apiKey'];
         return apiErrorMessage;
@@ -60,6 +74,7 @@ class UserProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         _name = jsonDecode(response.body)['name'];
         _email = jsonDecode(response.body)['email'];
+        _course = jsonDecode(response.body)['course'];
         _isLoggedIn = true;
         _apiKey = jsonDecode(response.body)['apiKey'];
         return apiErrorMessage;
