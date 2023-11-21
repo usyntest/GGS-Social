@@ -29,7 +29,9 @@ class UserProvider extends ChangeNotifier {
       this._name, this._email, this._course, this._isLoggedIn, this._apiKey);
 
   Future<String> checkDetailsLogin(email, password) async {
-    String url = 'http://10.0.2.2:5000/auth/login/';
+    String url = 'https://usyntest.pythonanywhere.com/auth/login/';
+    // String url = 'http://10.0.2.2:5000/auth/login/';
+
     Map<String, String> data = {"password": password, "email": email};
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json; charset=UTF-8',
@@ -59,7 +61,9 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<String> checkDetailsRegister(Map<String, String?> data) async {
-    String url = 'http://10.0.2.2:5000/auth/register/';
+    String url = 'https://usyntest.pythonanywhere.com/auth/register/';
+    // String url = 'http://10.0.2.2:5000/auth/register/';
+
     Map<String, String> requestHeaders = {
       'Content-Type': 'application/json; charset=UTF-8',
     };

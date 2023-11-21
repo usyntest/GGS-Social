@@ -7,7 +7,8 @@ confession_bp = Blueprint('confession', __name__, url_prefix='/confession')
 @confession_bp.route('/get/', methods=['GET'])
 def get_confessions():
     try:
-        api_key = request.args.get('apiKey', '').encode('utf-8')
+        # api_key = request.args.get('apiKey', '').encode('utf-8')
+        api_key = request.headers.get('x-api-key', '').encode('utf-8')
 
         if api_key == "":
             return jsonify({"error": "API key is missing"}), 401
@@ -24,7 +25,6 @@ def get_confessions():
         confessions = db.execute("SELECT * FROM confession ORDER BY confession_id DESC LIMIT 25").fetchall()
 
         confession_list = [{"body": confession["body"]} for confession in confessions]
-        print(confession_list)
 
         return jsonify({"message": "confession list sent", "confessions": confession_list}), 200
 
@@ -58,7 +58,6 @@ def post_confessions():
 
         confession_list = [{"body": confession["body"]} for confession in confessions]
 
-        print(confession_list)
         return jsonify({"message": "confession created", "confessions": confession_list}), 200
 
     except Exception as e:
