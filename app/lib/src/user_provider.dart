@@ -54,8 +54,7 @@ class UserProvider extends ChangeNotifier {
       }
       apiErrorMessage = 'Invalid Password or Email';
     } catch (error) {
-      print('Error making the POST request: $error'); // remove in production
-      apiErrorMessage = 'Couldn\'t make the request';
+      apiErrorMessage = '$error';
     }
     return apiErrorMessage;
   }
@@ -91,8 +90,7 @@ class UserProvider extends ChangeNotifier {
       }
       apiErrorMessage = 'Invalid Request';
     } catch (error) {
-      print('Error making the POST request: $error'); // remove in production
-      apiErrorMessage = 'Couldn\'t make the request';
+      apiErrorMessage = '$error';
     }
     return apiErrorMessage;
   }

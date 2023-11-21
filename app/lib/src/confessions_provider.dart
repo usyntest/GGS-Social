@@ -26,9 +26,8 @@ class ConfessionsProvider extends ChangeNotifier {
   }
 
   void get_confessions() async {
-    String url =
-        'https://usyntest.pythonanywhere.com/confession/get/';
-        // 'http://10.0.2.2:5000/confession/get/';
+    String url = 'https://usyntest.pythonanywhere.com/confession/get/';
+    // 'http://10.0.2.2:5000/confession/get/';
 
     try {
       http.Response response = await http.get(
