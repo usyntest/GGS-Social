@@ -87,3 +87,24 @@ def post_confession():
     db.commit()
     
     return {"message": "Confession Posted"}, 200
+
+@app.route('/create_user', methods=['POST'])
+def create_user():
+    data = request.get_json()
+    
+    if len(data) == 0:
+        return {"message": "Invalid JSON data"}, 400
+    
+    for key in ['name', 'email', 'password', 'course']:
+        if data.get(key, '') == "":
+            return {"message": "Data is missing"}, 400
+        
+    if user_exists(data.get('email', '')):
+        return {"message": "Email is already registered"}, 400
+    
+    db = sqlite3.connect(database)
+    cur = db.cursor()
+    cur.execute("INSERT INTO user (name, email, password, course) VALUES (?, ?, ?, ?)", (data.get('name'), data.get('email'), data.get('password'), data.get('course')))
+    db.commit()
+
+    return {"message": "User Created"}, 200

@@ -16,12 +16,6 @@ users = [
         "course": "BSC",
     },
     {
-        "name": "Aishwarya Jajoo",
-        "email": "aishwarya.224014@sggscc.ac.in",
-        "password": "uday1601",
-        "course": "BSC",
-    },
-    {
         "name": "Priyanshi Makkar",
         "email": "priyanshi.224016@sggscc.ac.in",
         "password": "uday1601",
@@ -31,19 +25,19 @@ users = [
 
 confessions = [
     {
-        "user_id": 0,
+        "user_id": 1,
         "body": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?"
     },
     {
-        "user_id": 0,
-        "body": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?"
-    },
-    {
-        "user_id": 3,
+        "user_id": 1,
         "body": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?"
     },
     {
         "user_id": 2,
+        "body": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?"
+    },
+    {
+        "user_id": 3,
         "body": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?"
     }
 ]
