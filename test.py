@@ -118,7 +118,7 @@ inputs = [
         ]
     },
     {
-        "path": "create_user",
+        "path": "register",
         "method": "POST",
         "desc": "Create User",
         "inputs": [
@@ -187,6 +187,55 @@ inputs = [
                 "status_code": 400,
                 "message": "Data is missing",
                 "help": "Body is empty"
+            },
+            {   
+                "data": {},
+                "status_code": 400,
+                "message": "Invalid JSON data",
+                "help": "Empty data object"
+            }
+        ]
+    },
+    {
+        "path": "login",
+        "method": "POST",
+        "desc": "Login",
+        "inputs": [
+            {
+                "data": {
+                    "email": "uday.224026@sggscc.ac.in",
+                    "password": "uday1601",
+                },
+                "status_code": 200,
+                "message": "Logged In Successfully",
+                "help": "Proper request"
+            },
+            {
+                "data": {
+                    "email": "itsudayy@gmail.com",
+                    "password": "uday1601",
+                },
+                "status_code": 400,
+                "message": "Email is not registered",
+                "help": "Email is not registered"
+            },
+            {
+                "data": {
+                    "email": "uday.224026@sggscc.ac.in",
+                    "password": "",
+                },
+                "status_code": 400,
+                "message": "Data is missing",
+                "help": "Password is empty"
+            },
+            {
+                "data": {
+                    "email": "",
+                    "password": "uday1601",
+                },
+                "status_code": 400,
+                "message": "Data is missing",
+                "help": "Email is empty"
             },
             {   
                 "data": {},

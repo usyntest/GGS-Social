@@ -88,8 +88,8 @@ def post_confession():
     
     return {"message": "Confession Posted"}, 200
 
-@app.route('/create_user', methods=['POST'])
-def create_user():
+@app.route('/register', methods=['POST'])
+def register():
     data = request.get_json()
     
     if len(data) == 0:
@@ -108,3 +108,25 @@ def create_user():
     db.commit()
 
     return {"message": "User Created"}, 200
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    
+    if len(data) == 0:
+        return {"message": "Invalid JSON data"}, 400
+    
+    for key in ['email', 'password']:
+        if data.get(key, '') == "":
+            return {"message": "Data is missing"}, 400
+        
+    if not user_exists(data.get('email', '')):
+        return {"message": "Email is not registered"}, 400
+    
+    db = sqlite3.connect(database)
+    res = db.execute('SELECT * FROM user WHERE email = ?;', (data.get('email'),)).fetchone()
+    
+    if data.get('password') != res[4]:
+        return {"message": "Password is incorrect"}, 400    
+    
+    return {"message": "Logged In Successfully"}, 200
