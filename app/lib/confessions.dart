@@ -93,7 +93,7 @@ class Confession extends StatelessWidget {
             Text(
               'Anonymous',
               style: TextStyle(
-                  color: Colors.purple,
+                  color: Colors.deepPurple,
                   fontSize: 15,
                   fontWeight: FontWeight.bold),
             ),
