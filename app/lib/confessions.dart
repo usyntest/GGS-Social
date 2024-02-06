@@ -63,7 +63,12 @@ class ConfessionsState extends State<Confessions> {
       );
     } else {
       return Scaffold(
-          appBar: AppBar(title: Text('Confessions')),
+          appBar: AppBar(
+            title: Text(
+              'Confessions',
+            ),
+            centerTitle: true,
+          ),
           body: ListView.separated(
             itemCount: confessions.length,
             itemBuilder: (BuildContext context, int index) {
@@ -86,25 +91,25 @@ class Confession extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Row(
           children: [
-            Text(
-              'Anonymous',
-              style: TextStyle(
-                  color: Colors.deepPurple,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold),
+            CircleAvatar(
+              backgroundImage: AssetImage('images/anonymous.jpeg'),
+              radius: 15,
             ),
             SizedBox(
               width: 10,
             ),
-            Text(time)
+            Text(
+              'Anonymous',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
         Container(
-          padding: EdgeInsets.symmetric(vertical: 5),
+          padding: EdgeInsets.symmetric(vertical: 10),
           child: Text(
             body,
             textAlign: TextAlign.left,

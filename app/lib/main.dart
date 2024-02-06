@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app/confessions.dart';
-import 'package:app/profile.dart';
+import 'package:app/home.dart';
+import 'package:app/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,36 +17,25 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomePage(),
+      home: AuthenticationWrapper(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
+class AuthenticationWrapper extends StatefulWidget {
   @override
-  State<HomePage> createState() => HomePageState();
+  State<AuthenticationWrapper> createState() => AuthenticationWrapperState();
 }
 
-class HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  List<Widget> pages = [Confessions(), Profile()];
+class AuthenticationWrapperState extends State<AuthenticationWrapper> {
+  bool _isAuthenticated = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.add), label: "Confessions"),
-          BottomNavigationBarItem(icon: Icon(Icons.person_2), label: "Profile")
-        ],
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-      ),
-    );
+    if (_isAuthenticated) {
+      return Home();
+    } else {
+      return Login();
+    }
   }
 }

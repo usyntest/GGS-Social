@@ -4,42 +4,53 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Profile')),
-        body: Container(
-          alignment: Alignment.center,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+      appBar: AppBar(title: Text('Profile')),
+      body: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            alignment: Alignment.center,
+            child: CircleAvatar(
+              backgroundImage: AssetImage('images/anonymous.jpeg'),
+              radius: 50,
+            ),
+          ),
+          Container(
+            padding: EdgeInsetsDirectional.symmetric(vertical: 5),
+            child: Text(
+              'Uday Sharma',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 15),
-                child: CircleAvatar(
-                  backgroundImage: AssetImage('images/anonymous.jpeg'),
-                  radius: 50,
-                ),
-              ),
-              Container(
-                padding: EdgeInsetsDirectional.symmetric(vertical: 5),
-                child: Text(
-                  'Uday Sharma',
-                  style: TextStyle(
-                      color: Colors.deepPurple,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24),
-                ),
-              ),
-              Text(
-                'uday.224026@sggscc.ac.in',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              Icon(Icons.school_outlined),
               SizedBox(
-                height: 10,
+                width: 10,
               ),
               Text(
                 'B.Sc. (Hons.) Computer Science',
-                style: TextStyle(fontWeight: FontWeight.w500),
               ),
             ],
           ),
-        ));
+          SizedBox(
+            height: 5,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.email_outlined),
+              SizedBox(
+                width: 10,
+              ),
+              Text(
+                'uday.224026@sggscc.ac.in',
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
