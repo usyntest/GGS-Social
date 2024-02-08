@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:app/home.dart';
 import 'package:app/login.dart';
+import 'package:provider/provider.dart';
+import 'package:app/userModel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,30 +14,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'GGS Social',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: AuthenticationWrapper(),
+      home: ChangeNotifierProvider(
+        create: (context) => UserModel(),
+        child: AuthenticationWrapper(),
+      ),
     );
   }
 }
 
-class AuthenticationWrapper extends StatefulWidget {
-  @override
-  State<AuthenticationWrapper> createState() => AuthenticationWrapperState();
-}
-
-class AuthenticationWrapperState extends State<AuthenticationWrapper> {
-  bool _isAuthenticated = false;
-
+class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (_isAuthenticated) {
-      return Home();
-    } else {
+    return Consumer<UserModel>(builder: (context, user, child) {
+      if (user.isLoggedIn) {
+        return Home();
+      }
       return Login();
-    }
+    });
   }
 }
