@@ -8,16 +8,13 @@ class UserModel extends ChangeNotifier {
   late String course;
   late String email;
   late String password;
+  late int userID;
 
   void login(String email, String password) async {
     bool validDetails = await getUser(email, password);
     if (!validDetails) {
       return;
     }
-    this.name = 'Uday Sharma';
-    this.course = 'B.Sc. (Hons.) Computer Science';
-    this.email = email;
-    this.password = password;
     isLoggedIn = true;
     notifyListeners();
   }
@@ -32,6 +29,17 @@ class UserModel extends ChangeNotifier {
         body: jsonEncode(data), headers: {'content-type': "application/json"});
 
     if (res.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(res.body);
+      // this.name = body["name"];
+      // this.email = body["email"];
+      // this.course = body["course"];
+      // this.password = body["password"];
+      // this.userID = body["userID"];
+      this.name = body["user"]?["name"];
+      this.email = body["user"]?["email"];
+      this.course = body["user"]?["course"];
+      this.password = body["user"]?["password"];
+      this.userID = body["user"]?["userID"];
       return true;
     }
     return false;

@@ -137,6 +137,6 @@ def login():
     if data.get('password') != res[4]:
         return {"message": "Password is incorrect"}, 400
 
-    user = {"userID": res[0], "name": res[1], "email": res[2], "password": res[3]}
+    user = {"userID": res[0], "name": res[1], "email": res[2], "course": res[3], "password": res[4]}
 
     return {"message": "Logged In Successfully", "user": user}, 200
