@@ -1,6 +1,9 @@
+import 'package:app/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:provider/provider.dart';
 
 class ConfessionPost {
   final int userID;
@@ -19,12 +22,50 @@ class Confessions extends StatefulWidget {
 class ConfessionsState extends State<Confessions> {
   bool empty = true;
   List<ConfessionPost> confessions = [];
-  String develURL = 'http://10.0.2.2:5000/confessions';
+  String develURL = 'http://10.0.2.2:5000/';
   String deployURL = '';
 
+  TextEditingController confessionController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    confessionController.dispose();
+    super.dispose();
+  }
+
   Future<http.Response> fetchConfessions() {
-    return http.get(Uri.parse(develURL),
-        headers: {'email': "uday.224026@sggscc.ac.in"});
+    String url = develURL + "/confessions";
+    return http
+        .get(Uri.parse(url), headers: {'email': "uday.224026@sggscc.ac.in"});
+  }
+
+  Future<http.Response> postConfession(
+      String email, String password, int userID) {
+    Map data = {
+      "email": email,
+      "password": password,
+      "userID": userID,
+      "body": confessionController.text
+    };
+    String url = develURL + "/confession";
+    return http.post(Uri.parse(url),
+        headers: {'content-type': "application/json"}, body: jsonEncode(data));
+  }
+
+  void post(String email, String password, int userID) async {
+    http.Response res = await postConfession(email, password, userID);
+
+    if (res.statusCode == 200) {
+      setState(() {
+        confessions.insert(
+            0,
+            ConfessionPost(
+                userID: userID,
+                body: confessionController.text,
+                time: DateTime.now().toString()));
+      });
+    }
   }
 
   void fetch() async {
@@ -62,22 +103,81 @@ class ConfessionsState extends State<Confessions> {
         body: Text('Confessions Page'),
       );
     } else {
-      return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Confessions',
-            ),
-            centerTitle: true,
-          ),
-          body: ListView.separated(
-            itemCount: confessions.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Confession(
-                  body: confessions[index].body, time: confessions[index].time);
-            },
-            separatorBuilder: (BuildContext context, int index) =>
-                const Divider(),
-          ));
+      return Consumer<UserModel>(
+          builder: ((context, user, child) => Scaffold(
+              appBar: AppBar(
+                title: Text(
+                  'Confessions',
+                ),
+                centerTitle: true,
+              ),
+              floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.add_comment),
+                onPressed: () {
+                  // adding some properties
+                  showModalBottomSheet(
+                    context: context,
+                    //elevates modal bottom screen
+                    elevation: 10,
+
+                    // gives rounded corner to modal bottom screen
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    builder: (BuildContext context) {
+                      // UDE : SizedBox instead of Container for whitespaces
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                            left: 20,
+                            right: 20),
+                        child: SizedBox(
+                          height: 200,
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Write your confession here!',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                TextField(
+                                  controller: confessionController,
+                                  keyboardType: TextInputType.multiline,
+                                  minLines: 1,
+                                  maxLines: 5,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 20),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        post(user.email, user.password,
+                                            user.userID);
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('Post Confession')),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+              body: ListView.separated(
+                itemCount: confessions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Confession(
+                      body: confessions[index].body,
+                      time: confessions[index].time);
+                },
+                separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(),
+              ))));
     }
   }
 }

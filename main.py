@@ -83,12 +83,12 @@ def post_confession():
         if data.get(key, '') == "":
             return {"message": "Data is missing"}, 400
 
-    if not user_exists(data.get("email", ''), data.get('user_id')):
+    if not user_exists(data.get("email", ''), data.get('userID')):
         return {"message": "Email is not registered"}, 400
 
     db = sqlite3.connect(database)
     cur = db.cursor()
-    cur.execute("INSERT INTO confession (user_id, body) VALUES (?, ?);", (data["user_id"], data["body"]))
+    cur.execute("INSERT INTO confession (user_id, body) VALUES (?, ?);", (data["userID"], data["body"]))
     db.commit()
 
     return {"message": "Confession Posted"}, 200

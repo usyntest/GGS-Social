@@ -45,7 +45,7 @@ inputs = [
         "inputs": [
             {
                 "data": {
-                    "user_id": 1,
+                    "userID": 1,
                     "email": "uday.224026@sggscc.ac.in",
                     "password": "uday1601",
                     "body": "hello world, im uday and this is me testing my api."
@@ -56,7 +56,7 @@ inputs = [
             },
             {
                 "data": {
-                    "user_id": 1,
+                    "userID": 1,
                     "email": "itsudayy@gmail.com",
                     "password": "uday1601",
                     "body": "hello world, im uday and this is me testing my api."
@@ -67,7 +67,7 @@ inputs = [
             },
             {
                 "data": {
-                    "user_id": 1,
+                    "userID": 1,
                     "email": "uday.224026@sggscc.ac.in",
                     "password": "",
                     "body": "hello world, im uday and this is me testing my api."
@@ -78,7 +78,7 @@ inputs = [
             },
             {
                 "data": {
-                    "user_id": 1,
+                    "userID": 1,
                     "email": "",
                     "password": "uday1601",
                     "body": "hello world, im uday and this is me testing my api."
@@ -89,7 +89,7 @@ inputs = [
             },
             {
                 "data": {
-                    "user_id": 0,
+                    "userID": 0,
                     "email": "uday.224026@sggscc.ac.in",
                     "password": "uday1601",
                     "body": "hello world, im uday and this is me testing my api."
@@ -100,7 +100,7 @@ inputs = [
             },
             {
                 "data": {
-                    "user_id": 1,
+                    "userID": 1,
                     "email": "uday.224026@sggscc.ac.in",
                     "password": "uday1601",
                     "body": ""
