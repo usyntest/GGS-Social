@@ -96,7 +96,7 @@ nav {
   background-image: url(./static/images/purple-bg.webp);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: contain;
+  background-size: cover;
   display: flex;
   justify-self: center;
   align-items: center;
@@ -127,7 +127,7 @@ nav {
   background-image: url(./static/images/pink-bg.webp);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: contain;
+  background-size: cover;
   display: flex;
   justify-self: center;
   align-items: center;
