@@ -30,11 +30,6 @@ class UserModel extends ChangeNotifier {
 
     if (res.statusCode == 200) {
       Map<String, dynamic> body = json.decode(res.body);
-      // this.name = body["name"];
-      // this.email = body["email"];
-      // this.course = body["course"];
-      // this.password = body["password"];
-      // this.userID = body["userID"];
       this.name = body["user"]?["name"];
       this.email = body["user"]?["email"];
       this.course = body["user"]?["course"];

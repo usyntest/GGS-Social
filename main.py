@@ -3,6 +3,7 @@ import sqlite3
 import os
 
 database = 'ggs-social.db'
+script = 'database.sql'
 
 
 def create_db():
@@ -10,14 +11,13 @@ def create_db():
         print("Database already exists.")
         return False
 
-    con = sqlite3.connect(database)
-    cur = con.cursor()
+    with open(script, "r") as f, sqlite3.connect(database) as conn:
+        cur = conn.cursor()
+        sql_string = f.read()
+        cur.executescript(sql_string)
+        conn.commit()
 
-    cur.execute(
-        "CREATE TABLE IF NOT EXISTS user (user_id INTEGER PRIMARY KEY, name TEXT NOT NULL, email TEXT UNIQUE, course TEXT, password TEXT);")
-
-    cur.execute(
-        "CREATE TABLE IF NOT EXISTS confession(post_id INTEGER PRIMARY_KEY, user_id INTEGER, body TEXT, created DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES user(user_id));")
+    return True
 
 
 def user_exists(email, user_id=None):
@@ -140,3 +140,37 @@ def login():
     user = {"userID": res[0], "name": res[1], "email": res[2], "course": res[3], "password": res[4]}
 
     return {"message": "Logged In Successfully", "user": user}, 200
+
+
+@app.route('/profile/<int:user_id>', methods=["GET"])
+def profile(user_id):
+    response = {}
+    db = sqlite3.connect(database)
+    cursor = db.cursor()
+    res = cursor.execute("SELECT * FROM user WHERE email = ?", ("uday.224026@sggscc.ac.in",)).fetchone()
+
+    if res is None:
+        response["message"] = "User not found"
+        return response, 404
+
+    response["user"] = {
+        "userID": res[0], "name": res[1], "email": res[2], "course": res[3], "password": res[4], "confessions": []
+    }
+    response["message"] = "User found"
+
+    cursor.execute("SELECT * FROM confession WHERE tag = ?", (user_id,))
+
+    # Fetch all the rows from the result set
+    confessions = cursor.fetchall()
+    if len(confessions) == 0:
+        return response, 200
+
+    # Print or process the retrieved confessions
+    for confession in confessions:
+        response["user"]["confessions"].append({"body": confession[2], "time": confession[3], "userID": confession[4]})
+
+    # Close the cursor and connection
+    cursor.close()
+    db.close()
+
+    return response
