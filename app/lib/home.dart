@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:app/confessions.dart';
 import 'package:app/profile.dart';
+import 'package:app/townHall.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,7 +10,11 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> {
   int _selectedIndex = 0;
-  List<Widget> pages = [Confessions(), Profile()];
+  List<Widget> pages = [
+    TownHall(),
+    Confessions(),
+    Profile(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +22,7 @@ class HomeState extends State<Home> {
       body: pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Town Hall"),
           BottomNavigationBarItem(icon: Icon(Icons.add), label: "Confessions"),
           BottomNavigationBarItem(icon: Icon(Icons.person_2), label: "Profile")
         ],
