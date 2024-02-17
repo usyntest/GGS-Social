@@ -147,7 +147,7 @@ def profile(user_id):
     response = {}
     db = sqlite3.connect(database)
     cursor = db.cursor()
-    res = cursor.execute("SELECT * FROM user WHERE email = ?", ("uday.224026@sggscc.ac.in",)).fetchone()
+    res = cursor.execute("SELECT * FROM user WHERE id = ?", (user_id,)).fetchone()
 
     if res is None:
         response["message"] = "User not found"
@@ -168,6 +168,68 @@ def profile(user_id):
     # Print or process the retrieved confessions
     for confession in confessions:
         response["user"]["confessions"].append({"body": confession[2], "time": confession[3], "userID": confession[4]})
+
+    # Close the cursor and connection
+    cursor.close()
+    db.close()
+
+    return response
+
+
+@app.route("/confessions/<int:user_id>", methods=["GET"])
+def user_confessions(user_id):
+    response = {}
+    db = sqlite3.connect(database)
+    cursor = db.cursor()
+    res = cursor.execute("SELECT * FROM user WHERE id = ?", (user_id,)).fetchone()
+
+    if res is None:
+        response["message"] = "User not found"
+        return response, 404
+
+    cursor.execute("SELECT * FROM confession WHERE tag = ?", (user_id,))
+
+    # Fetch all the rows from the result set
+    confessions = cursor.fetchall()
+    response["data"] = []
+    if len(confessions) == 0:
+        response["message"] = "No Confessions yet"
+
+        return response, 200
+
+    # Print or process the retrieved confessions
+    for confession in confessions:
+        response["data"].append({"body": confession[2], "time": confession[3]})
+
+    # Close the cursor and connection
+    cursor.close()
+    db.close()
+
+    return response
+
+
+@app.route("/posts/<int:user_id>", methods=["GET"])
+def user_posts(user_id):
+    response = {}
+    db = sqlite3.connect(database)
+    cursor = db.cursor()
+    res = cursor.execute("SELECT * FROM user WHERE id = ?", (user_id,)).fetchone()
+
+    if res is None:
+        response["message"] = "User not found"
+        return response, 404
+
+    name = res[1]
+    posts = cursor.execute("SELECT * FROM post WHERE user_id = ?", (user_id,)).fetchall()
+
+    response["data"] = []
+    if len(posts) == 0:
+        response["message"] = "No Posts yet"
+        return response, 200
+
+    for post in posts:
+        response["data"].append({"postID": post[0], "likes": post[1], "name": name, "body": post[3],
+                                 "imageURL": post[4], "createdAt": post[5]})
 
     # Close the cursor and connection
     cursor.close()

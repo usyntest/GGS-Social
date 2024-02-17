@@ -1,59 +1,70 @@
 import 'package:flutter/material.dart';
-
-List townHallPosts = [
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12",
-    "likes": 20,
-    "imageURL":
-        "https://images.pexels.com/photos/258447/pexels-photo-258447.jpeg"
-  },
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12",
-    "likes": 20,
-    "imageURL":
-        "https://images.pexels.com/photos/258447/pexels-photo-258447.jpeg"
-  },
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12",
-    "likes": 20,
-  },
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12",
-    "likes": 20,
-    "imageURL":
-        "https://images.pexels.com/photos/258447/pexels-photo-258447.jpeg"
-  }
-];
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:provider/provider.dart';
+import 'package:app/userModel.dart';
 
 class TownHall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Town Hall'),
-        ),
-        body: ListView.separated(
-          itemCount: townHallPosts.length,
-          itemBuilder: (BuildContext context, int index) {
-            return TownHallPost(
-              body: townHallPosts[index]["body"],
-              time: townHallPosts[index]["time"],
-              likes: townHallPosts[index]["likes"],
-              imageURL: (townHallPosts[index]["imageURL"] ?? ""),
-              name: "Uday Sharma",
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) =>
-              const Divider(),
-        ));
+    return Consumer<UserModel>(
+        builder: ((context, user, chiild) => Scaffold(
+            appBar: AppBar(
+              title: Text('Town Hall'),
+            ),
+            body: TownHallPosts(
+              userID: user.userID,
+            ))));
+  }
+}
+
+class TownHallPosts extends StatefulWidget {
+  int userID;
+
+  TownHallPosts({Key? key, required this.userID}) : super(key: key);
+
+  @override
+  State<TownHallPosts> createState() => _TownHallPostsState(userID: userID);
+}
+
+class _TownHallPostsState extends State<TownHallPosts> {
+  List<dynamic> townHallPosts = [];
+  int userID;
+
+  _TownHallPostsState({Key? key, required this.userID});
+
+  void fetch_data(String url) async {
+    http.Response res = await http.get(Uri.parse(url));
+    if (res.statusCode == 200) {
+      List<dynamic> data = json.decode(res.body)["data"];
+      setState(() {
+        townHallPosts = data;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the fetch method when the widget is inserted into the tree.
+    fetch_data("http://10.0.2.2:5000/posts/$userID");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemCount: townHallPosts.length,
+      itemBuilder: (BuildContext context, int index) {
+        return TownHallPost(
+          body: townHallPosts[index]["body"],
+          time: townHallPosts[index]["createdAt"],
+          likes: townHallPosts[index]["likes"],
+          imageURL: (townHallPosts[index]["imageURL"] ?? ""),
+          name: (townHallPosts[index]["name"]),
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
+    );
   }
 }
 

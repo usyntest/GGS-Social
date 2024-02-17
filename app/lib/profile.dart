@@ -3,62 +3,8 @@ import 'package:app/userModel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app/confessions.dart';
-
-List confessions = [
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12"
-  },
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12"
-  },
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12"
-  },
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12"
-  },
-];
-
-List townHallPosts = [
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12",
-    "likes": 20,
-    "imageURL":
-        "https://images.pexels.com/photos/258447/pexels-photo-258447.jpeg"
-  },
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12",
-    "likes": 20,
-    "imageURL":
-        "https://images.pexels.com/photos/258447/pexels-photo-258447.jpeg"
-  },
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12",
-    "likes": 20,
-  },
-  {
-    "body":
-        "lorem ipsum, dolor sit met consectetur adipiscing elit. Amet totam ipsam iusto quod omnis nulla, maiores voluptate molestias cumque similique?",
-    "time": "12-01-2024 3:58:12",
-    "likes": 20,
-    "imageURL":
-        "https://images.pexels.com/photos/258447/pexels-photo-258447.jpeg"
-  }
-];
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Profile extends StatelessWidget {
   @override
@@ -146,55 +92,75 @@ class LowerProfileBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
-      child: Column(
-        children: [
-          TabBar(
-            tabs: [
-              Tab(text: 'Town Hall'),
-              Tab(text: 'Confessions'),
-            ],
-          ),
-          Expanded(
-              child: Container(
-            margin: EdgeInsets.symmetric(vertical: 5),
-            child: TabBarView(
-              children: [
-                // Content for the 'Town Hall' tab
-                ProfileTownHallPosts(),
-                // Content for the 'Confessions' tab
-                ProfileConfessionPosts(),
+        length: 2,
+        child: Column(
+          children: [
+            TabBar(
+              tabs: [
+                Tab(text: 'Town Hall'),
+                Tab(text: 'Confessions'),
               ],
             ),
-          )),
-        ],
-      ),
-    );
+            Expanded(
+              child: Container(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  child: Consumer<UserModel>(
+                    builder: ((context, user, child) => TabBarView(
+                          children: [
+                            TownHallPosts(
+                              userID: user.userID,
+                            ),
+                            // Content for the 'Confessions' tab
+                            ProfileConfessionPosts(userID: user.userID),
+
+                            // Content for the 'Town Hall' tab
+                          ],
+                        )),
+                  )),
+            )
+          ],
+        ));
   }
 }
 
-class ProfileTownHallPosts extends StatelessWidget {
+class ProfileConfessionPosts extends StatefulWidget {
+  int userID;
+
+  ProfileConfessionPosts({Key? key, required this.userID}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: townHallPosts.length,
-      itemBuilder: (BuildContext context, int index) {
-        return TownHallPost(
-          body: townHallPosts[index]["body"],
-          time: townHallPosts[index]["time"],
-          likes: townHallPosts[index]["likes"],
-          imageURL: (townHallPosts[index]["imageURL"] ?? ""),
-          name: "Uday Sharma",
-        );
-      },
-      separatorBuilder: (BuildContext context, int index) => const Divider(),
-    );
-  }
+  State<ProfileConfessionPosts> createState() =>
+      _ProfileConfessionPostsState(userID: userID);
 }
 
-class ProfileConfessionPosts extends StatelessWidget {
+class _ProfileConfessionPostsState extends State<ProfileConfessionPosts> {
+  List<dynamic> confessions = [];
+  int userID;
+
+  _ProfileConfessionPostsState({Key? key, required this.userID});
+
+  void fetch_data(String url) async {
+    http.Response res = await http.get(Uri.parse(url));
+    if (res.statusCode == 200) {
+      List<dynamic> data = json.decode(res.body)["data"];
+      setState(() {
+        confessions = data;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Call the fetch method when the widget is inserted into the tree.
+    fetch_data("http://10.0.2.2:5000/confessions/$userID");
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (confessions.isEmpty) {
+      return Center(child: Text('No Confessions yet'));
+    }
     return ListView.separated(
       itemCount: confessions.length,
       itemBuilder: (BuildContext context, int index) {
